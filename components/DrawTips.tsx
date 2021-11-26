@@ -74,7 +74,7 @@ export default class DrawTips extends Component {
         let cpt = this.state.cpt + 1;
 
         // TODO : correct lag
-        if (cpt % 5 == 0) {
+        if (cpt % 3 == 0) {
             SocketService.sendCircles(arrayCoordinates);
         }
 

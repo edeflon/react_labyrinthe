@@ -40,6 +40,7 @@ export default function BallControl(level: any) {
     const _subscribe = () => {
         DeviceMotion.addListener((devicemotionData) => {
             if (ball.isWin(x.value, y.value, currentLevel.endZone)) {
+                SocketService.sendToNextLevel();
                 setModalWinVisible(true);
             } else {
                 setData(devicemotionData.rotation);
@@ -68,8 +69,9 @@ export default function BallControl(level: any) {
                 }
 
                 cptSend += 1;
-                if (cptSend == 40) {
+                if (cptSend == 10) {
                     cptSend = 0;
+                    // SocketService.sendBallPosition([vx.value, vy.value]);
                     SocketService.sendBallPosition(
                     [(x.value / dimension.width),
                         (y.value / dimension.height)]);

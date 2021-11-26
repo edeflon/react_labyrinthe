@@ -23,12 +23,17 @@ export default function BallView(level: any) {
 
     const x = useSharedValue(ball.x);
     const y = useSharedValue(ball.y);
+    const vx = useSharedValue(ball.vx);
+    const vy = useSharedValue(ball.vy);
 
     const [translateX, setTranslateX] = useState(interpolate(x.value, [-1, 1], [36, dimension.width]))
     const [translateY, setTranslateY] = useState(interpolate(y.value, [-1, 1], [0, dimension.height]))
 
     const _subscribe = () => {
-        if (!modalWinVisible) SocketService.receiveBallPosition(setBallPosition);
+        SocketService.goToNextLevel(() => { setModalWinVisible(true) });
+        if (!modalWinVisible) {
+            SocketService.receiveBallPosition(setBallPosition);
+        }
     }
 
     const setBallPosition = (ballPosition: [number, number]) => {
@@ -94,6 +99,10 @@ export default function BallView(level: any) {
                 {labyrinthe}
             </View>
             <View style={styles.downview}>
+                {modalWinVisible ?
+                    winModal()
+                    : null
+                }
                 {/* BALL */}
                 <Svg height="100%"
                      width="100%"
@@ -103,10 +112,6 @@ export default function BallView(level: any) {
                             cy={y.value}
                             r={ball.size}/>
                 </Svg>
-                {modalWinVisible ?
-                    winModal()
-                    : null
-                }
             </View>
         </View>
     );

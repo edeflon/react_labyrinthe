@@ -2,7 +2,7 @@ import {io} from "socket.io-client";
 import Circle from "../models/Circle";
 import {PlayerType} from "../enum/PlayerType";
 
-const socket = io('http://192.168.1.17:3000', {transports: ['websocket']});
+const socket = io('http://192.168.1.96:3000', {transports: ['websocket']});
 
 
 export const SocketService = {
@@ -18,10 +18,17 @@ export const SocketService = {
     sendBallPosition(ballPosition: [number, number]) {
         socket.emit("sendBallPosition", ballPosition);
     },
-    receiveBallPosition(callback:Function) {
+    receiveBallPosition(callback: Function) {
         socket.on("receiveBallPosition", (ballPosition) => {
             callback(ballPosition);
         });
+    },
+
+    sendToNextLevel(){
+        socket.emit("sendToNextLevel");
+    },
+    goToNextLevel(callback: Function){
+        socket.on("goToNextLevel", () => { callback() })
     },
 
     setPlayerType(type: PlayerType) {
