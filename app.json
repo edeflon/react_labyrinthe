@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Labynvisible",
-    "slug": "Labynvisible",
+    "name": "Labyrinvisible",
+    "slug": "Labyrinvisible",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -25,7 +25,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "info.labyrinvisible"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
