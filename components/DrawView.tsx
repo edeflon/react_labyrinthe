@@ -4,18 +4,15 @@ import Svg, {Line} from 'react-native-svg';
 import {SocketService} from "../utils/SocketService";
 import {dimension} from "../assets/dimension";
 
-// import {dimension} from "../assets/dimension";
-
-/** Draw Tips on labyrinthe */
+// Module de vue des dessins
 export function DrawView() {
     const [coordinates, setCoordinates] = useState([]);
     let lineId = 0;
 
+    // Récupère les dessins du dessinateur
     const _subscribe = () => {
         SocketService.receiveCircles(newCircles);
     }
-
-    // @ts-ignore
     const newCircles = (circles) => {
         setCoordinates(circles);
     }
@@ -25,6 +22,7 @@ export function DrawView() {
         // return () => _unsubscribe();
     }, []);
 
+    // Dessine les dessins sur l'affichage
     const drawLines = () => {
         if (coordinates != null) {
             let lines = [];
@@ -49,6 +47,7 @@ export function DrawView() {
         return null;
     }
 
+    // Affichage
     return (
         <View style={styles.container}>
             <Svg
@@ -62,6 +61,7 @@ export function DrawView() {
     );
 }
 
+// Style
 const styles = StyleSheet.create({
     container: {
         flex: 1,

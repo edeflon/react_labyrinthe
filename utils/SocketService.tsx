@@ -2,10 +2,11 @@ import {io} from "socket.io-client";
 import Circle from "../models/Circle";
 import {PlayerType} from "../enum/PlayerType";
 
-const socket = io('http://192.168.1.96:3000', {transports: ['websocket']});
+const socket = io('http://10.7.147.141:3000', {transports: ['websocket']}); // Création de la socket
 
-
+// Classe en charge des communications avec la socket
 export const SocketService = {
+    // Envoie et réception des dessins
     sendCircles(circles: Circle[]) {
         socket.emit("sendCircles", circles);
     },
@@ -15,6 +16,7 @@ export const SocketService = {
         });
     },
 
+    // Envoie et réception de la position de la balle
     sendBallPosition(ballPosition: [number, number]) {
         socket.emit("sendBallPosition", ballPosition);
     },
@@ -24,6 +26,7 @@ export const SocketService = {
         });
     },
 
+    // Signaux pour changer de niveau
     sendToNextLevel(){
         socket.emit("sendToNextLevel");
     },
@@ -31,10 +34,12 @@ export const SocketService = {
         socket.on("goToNextLevel", () => { callback() })
     },
 
+    // Définition des joueurs
     setPlayerType(type: PlayerType) {
         socket.emit("playerConnexion", type);
     },
 
+    // Statut des joueurs
     setDrawerConnected(callback: Function) {
         socket.on('drawerConnected', () => {
             callback();
@@ -56,6 +61,7 @@ export const SocketService = {
         });
     },
 
+    // Statut de la partie
     onGameReady(callback: Function) {
         socket.on('gameReady', () => {
             callback();

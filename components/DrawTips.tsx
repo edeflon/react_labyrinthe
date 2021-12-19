@@ -7,11 +7,10 @@ import Circle from '../models/Circle';
 import {dimension} from "../assets/dimension";
 import {SocketService} from "../utils/SocketService";
 
-/** Draw Tips on labyrinthe */
+// Module de dessin
 export default class DrawTips extends Component {
     private lineId: number;
 
-    // @ts-ignore
     constructor(props) {
         super(props);
 
@@ -30,8 +29,8 @@ export default class DrawTips extends Component {
         this.lineId = 0;
     }
 
+    // Récupère les coordonnées du doigt du joueur en une liste de points
     getCoordinates(e: GestureResponderEvent) {
-        // @ts-ignore
         if (this.state.showMenu) {
             this.setState({showMenu: false});
         }
@@ -53,16 +52,13 @@ export default class DrawTips extends Component {
     addCircle() {
         // Create new Circle
         const newCircle = new Circle(
-            // @ts-ignore
             this.state.circleX, this.state.circleY, this.state.colorSelected, this.state.startLine,
         );
 
-        // @ts-ignore
         if (this.state.startLine) {
             this.setState({startLine: false});
         }
 
-        // @ts-ignore
         let arrayCoordinates = this.state.coordinates.slice();
 
         if (arrayCoordinates.length >= 10) {
@@ -70,10 +66,9 @@ export default class DrawTips extends Component {
         }
 
         arrayCoordinates.push(newCircle);
-        // @ts-ignore
         let cpt = this.state.cpt + 1;
 
-        // TODO : correct lag
+        // Envoie des cercles à l'autre joueur
         if (cpt % 3 == 0) {
             SocketService.sendCircles(arrayCoordinates);
         }
@@ -85,21 +80,18 @@ export default class DrawTips extends Component {
         });
     }
 
+    // Dessine des lignes entre chaque cercle pour obtenir un dessin en continu
     drawLines() {
-        // @ts-ignore
         if (this.state.drawing) {
             let lines = [];
-            // @ts-ignore
             for (let i = 0; i < this.state.coordinates.length - 1; i++) {
                 let id = "line_";
-                // @ts-ignore
                 if (this.state.coordinates[i] !== undefined && this.state.coordinates[i + 1] !== undefined && this.state.coordinates[i + 1].startLine !== true) {
                     this.lineId += 1;
                     id += this.lineId.toString();
                     lines.push(
                         <Line
                             key={id}
-                            // @ts-ignore
                             x1={this.state.coordinates[i].x} y1={this.state.coordinates[i].y} x2={this.state.coordinates[i + 1].x} y2={this.state.coordinates[i + 1].y} stroke={this.state.coordinates[i].color}
                             strokeLinecap={"round"}
                             strokeWidth='8'/>
@@ -111,6 +103,7 @@ export default class DrawTips extends Component {
         return null;
     }
 
+    // Affichage
     render() {
         return (
             <View style={styles.container}>
@@ -128,7 +121,7 @@ export default class DrawTips extends Component {
                         {this.drawLines()}
                     </Svg>
                 </Animated.View>
-                { // @ts-ignore
+                {
                     this.state.showMenu ?
                     (<View style={{
                         flexDirection: 'row',
@@ -157,10 +150,8 @@ export default class DrawTips extends Component {
                               style={{margin: 10, backgroundColor: "#5ADDFC", width: 35, height: 35}}/>
                     </View>) : null}
                 <FAB
-                    // @ts-ignore
                     style={[styles.fab, {backgroundColor: this.state.colorSelected}]}
                     icon="plus"
-                    // @ts-ignore
                     onPress={() => (this.state.showMenu ? this.setState({showMenu: false}) : this.setState({showMenu: true}))}
                 />
             </View>
@@ -168,6 +159,7 @@ export default class DrawTips extends Component {
     }
 }
 
+// Style
 const styles = StyleSheet.create({
     container: {
         flex: 1,

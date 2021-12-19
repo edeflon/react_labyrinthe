@@ -4,12 +4,13 @@ import {DrawView} from "../components/DrawView";
 import BallControl from "../components/BallControl";
 import {dimension} from "../assets/dimension";
 
+// Ecran du joueur "Controlleur"
 export default class ViewControl extends Component {
-    // @ts-ignore
     constructor(props) {
         super(props)
     }
 
+    // Affichage
     render() {
         return (
             <View style={styles.container}>
@@ -18,8 +19,7 @@ export default class ViewControl extends Component {
                     backgroundColor="#111"
                     hidden={false} />
                 <View style={styles.topview}>
-                    <BallControl level={//@ts-ignore
-                        this.props.level}/>
+                    <BallControl level={this.props.level}/>
                 </View>
                 <View style={styles.downview}>
                     <DrawView/>
@@ -29,6 +29,7 @@ export default class ViewControl extends Component {
     }
 }
 
+// Style de la page
 const styles = StyleSheet.create({
     container: {
         flex: 1,

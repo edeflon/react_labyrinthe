@@ -10,22 +10,20 @@ import {dimension} from "../assets/dimension";
 import Svg, {Circle} from "react-native-svg";
 import {Actions} from "react-native-router-flux";
 
+// Module de vue des mouvements de la balle
 export default function BallView(level: any) {
     const [subscription, setSubscription] = useState(null);
-
-    const [modalWinVisible, setModalWinVisible] = useState(false);
-
-    const [currentLevel, setCurrentLevel] = useState(level.level);
-    const [labyrinthe] = useState(() => Labyrinthe(currentLevel, true));
+    const [modalWinVisible, setModalWinVisible] = useState(false); // Pop up de victoire
+    const [currentLevel, setCurrentLevel] = useState(level.level); // Niveau actuel
+    const [labyrinthe] = useState(() => Labyrinthe(currentLevel, true)); // Labyrinthe du niveau
     const [ball] = useState(() => new Ball(currentLevel.startZone.x, currentLevel.startZone.y,
-        currentLevel.startZone.width, currentLevel.startZone.height, currentLevel.ball.v, currentLevel.ball.r));
+        currentLevel.startZone.width, currentLevel.startZone.height, currentLevel.ball.v, currentLevel.ball.r)); // Balle
 
-
+    // Coordonnées de la balle
     const x = useSharedValue(ball.x);
     const y = useSharedValue(ball.y);
     const vx = useSharedValue(ball.vx);
     const vy = useSharedValue(ball.vy);
-
     const [translateX, setTranslateX] = useState(interpolate(x.value, [-1, 1], [36, dimension.width]))
     const [translateY, setTranslateY] = useState(interpolate(y.value, [-1, 1], [0, dimension.height]))
 
@@ -36,6 +34,7 @@ export default function BallView(level: any) {
         }
     }
 
+    // Récupération de la position de la balle
     const setBallPosition = (ballPosition: [number, number]) => {
         x.value = ballPosition[0] * dimension.width;
         y.value = ballPosition[1] * dimension.height;
@@ -55,12 +54,14 @@ export default function BallView(level: any) {
         return () => _unsubscribe();
     }, []);
 
+    // Changement de niveau
     const nextLevel = () => {
         const level = levels.level2;
         setModalWinVisible(false);
         Actions.refresh({key: "ViewDraw", level: level});
     }
 
+    // Affichage de la pop up de victoire
     const winModal = () => {
         return (
             <View style={styles.centeredView}>
@@ -92,7 +93,7 @@ export default function BallView(level: any) {
         )
     }
 
-    // View
+    // Affichage
     return (
         <View style={styles.container}>
             <View style={styles.topview}>
@@ -117,6 +118,7 @@ export default function BallView(level: any) {
     );
 }
 
+// Style
 const styles = StyleSheet.create({
     container: {
         flex: 1,

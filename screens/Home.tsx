@@ -3,19 +3,23 @@ import {StyleSheet, ToastAndroid, View, Text, ImageBackground, StatusBar, Toucha
 import {Actions} from "react-native-router-flux";
 import {dimension} from "../assets/dimension";
 
-
+// Ecran d'accueil du jeu
 export default function Home() {
+    // Couleurs du titre
     const textColors = ['#FFF', '#EEE', '#DDD', '#CCC', '#BBB', '#AAA', '#999', '#888',
         '#777', '#666', '#555', '#444', '#333', '#222', '#111', '#000'];
 
+    // Action au clic du bouton "Jouer"
     const onJouerClic = () => {
         Actions.Lobby();
     }
 
+    // Action au clic du bouton "Scores"
     const onScoreClic = () => {
         ToastAndroid.show("Section \"Scores\" en construction", ToastAndroid.SHORT);
     }
 
+    // Affichage
     return (
         <ImageBackground source={require("../assets/images/labybackground.png")}
                          style={[{width: '100%', height: '100%'}]}>
@@ -55,6 +59,7 @@ export default function Home() {
     )
 }
 
+// Style de la page
 const styles = StyleSheet.create({
     container: {
         flex: 1,

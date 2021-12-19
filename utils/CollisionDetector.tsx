@@ -3,6 +3,7 @@ import {dimension} from "../assets/dimension";
 import Wall from "../models/Wall";
 import Hole from "../models/Hole";
 
+// Représentation d'un rectangle
 class Rect {
     x1: number;
     x2: number;
@@ -17,13 +18,14 @@ class Rect {
     }
 }
 
+// Classe en charge des collisions
 export default class CollisionDetector {
     walls: Wall[] = [];
     holes: Hole[] = [];
     ballR = 0;
 
     constructor(level: any) {
-        console.log("CollisionDetector set");
+        // Récupération des éléments du labyrinthe (murs, pièges)
         const interior_walls = level.interior_vertical_wall.concat(level.interior_horizontal_wall);
         const lab_walls = interior_walls.concat(level.exterior_walls);
 
@@ -40,6 +42,7 @@ export default class CollisionDetector {
         });
     }
 
+    // Retourne le rectangle autour de la balle
     xyr2Rect(x: number, y: number, r: number): Rect {
         const ballXPercent = (x / dimension.width) * 100;
         const ballYPercent = (y / dimension.height) * 100;
@@ -52,6 +55,7 @@ export default class CollisionDetector {
         )
     }
 
+    // Recherche d'une collision entre un piège et la balle
     isCollisionHole(ballX: number, ballY: number, ballR: number) {
         const ballRect = this.xyr2Rect(ballX, ballY, ballR)
 
@@ -71,7 +75,7 @@ export default class CollisionDetector {
         return false;
     }
 
-    // x : 10 - 30 - 50 - 70 - 90
+    // Recherche d'une collision entre un mur et la balle
     isCollision(ballX: number, ballY: number, ballR: number) {
         const ballRect = this.xyr2Rect(ballX, ballY, ballR);
 
@@ -92,11 +96,8 @@ export default class CollisionDetector {
         return "";
     }
 
+    // Recupère le type de collision (verticale ou horizontale)
     getCollisionType(ballRect: Rect, wallX: number, wallY: number, wallWidth: number, wallHeight: number) {
-        // console.log(wallX, ballRect.x2, wallX + wallWidth, ballRect.x1);
-        // console.log(wallY, ballRect.y2, );
-        // console.log("---")
-
         const colx1 = ballRect.x2 - wallX;
         const colx2 = (wallX + wallWidth) - ballRect.x1;
         const coly1 = ballRect.y2 - wallY;

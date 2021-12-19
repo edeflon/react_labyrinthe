@@ -11,8 +11,8 @@ import {SocketService} from "../utils/SocketService";
 import CollisionDetector from "../utils/CollisionDetector";
 import {Actions} from "react-native-router-flux";
 
+// Module de contrôle de la balle
 export default function BallControl(level: any) {
-    // début "constructeur"
     let cptSend = 0;
 
     // All functions for Gyroscope
@@ -22,27 +22,29 @@ export default function BallControl(level: any) {
         gamma: 0,
     });
 
-    const [modalWinVisible, setModalWinVisible] = useState(false);
-
-    const [currentLevel, setCurrentLevel] = useState(level.level);
-    const [labyrinthe] = useState(() => Labyrinthe(currentLevel, false));
+    const [modalWinVisible, setModalWinVisible] = useState(false); // Pop up de victoire
+    const [currentLevel, setCurrentLevel] = useState(level.level); // Niveau actuel
+    const [labyrinthe] = useState(() => Labyrinthe(currentLevel, false)); // Labyrinthe du niveau
     const [ball] = useState(() => new Ball(currentLevel.startZone.x, currentLevel.startZone.y,
-        currentLevel.startZone.width, currentLevel.startZone.height, currentLevel.ball.v, currentLevel.ball.r));
+        currentLevel.startZone.width, currentLevel.startZone.height, currentLevel.ball.v, currentLevel.ball.r)); // Balle
 
-    const [collisionDetector] = useState(() => new CollisionDetector(currentLevel));
+    const [collisionDetector] = useState(() => new CollisionDetector(currentLevel)); // Détecteur de collision
 
+    // Coordonnées de la balle
     const x = useSharedValue(ball.x);
     const y = useSharedValue(ball.y);
     const vx = useSharedValue(ball.vx);
     const vy = useSharedValue(ball.vy);
-    // Fin "constructeur"
 
+    // Récupération de la position de la balle
     const _subscribe = () => {
+        // Détection des mouvements du téléphone
         DeviceMotion.addListener((devicemotionData) => {
             if (ball.isWin(x.value, y.value, currentLevel.endZone)) {
                 SocketService.sendToNextLevel();
                 setModalWinVisible(true);
             } else {
+                // Mise à jour des coordonnées de la balle
                 setData(devicemotionData.rotation);
                 vx.value += devicemotionData.rotation.gamma;
                 vy.value += devicemotionData.rotation.beta;
@@ -53,6 +55,7 @@ export default function BallControl(level: any) {
                 const newX = x.value + vx.value;
                 const newY = y.value + vy.value;
 
+                // Vérification des collisions
                 if (collisionDetector.isCollisionHole(newX, newY, ball.r)) {
                     x.value = ball.x;
                     y.value = ball.y;
@@ -68,10 +71,10 @@ export default function BallControl(level: any) {
                     }
                 }
 
+                // Envoie des nouvelles coordonnées à l'autre joueur
                 cptSend += 1;
                 if (cptSend == 10) {
                     cptSend = 0;
-                    // SocketService.sendBallPosition([vx.value, vy.value]);
                     SocketService.sendBallPosition(
                     [(x.value / dimension.width),
                         (y.value / dimension.height)]);
@@ -90,12 +93,14 @@ export default function BallControl(level: any) {
         return () => _unsubscribe();
     }, []);
 
+    // Changement de niveau
     const nextLevel = () => {
         const level = levels.level2;
         setModalWinVisible(false);
         Actions.refresh({key: "ViewControl", level: level});
     }
 
+    // Affichage de la pop up de victoire
     const winModal = () => {
         return (
             <View style={styles.centeredView}>
@@ -127,7 +132,7 @@ export default function BallControl(level: any) {
         )
     }
 
-    // View
+    // Affichage
     return (
         <View style={styles.container}>
             <View style={styles.topview}>
@@ -152,6 +157,7 @@ export default function BallControl(level: any) {
     );
 }
 
+// Style
 const styles = StyleSheet.create({
     container: {
         flex: 1,

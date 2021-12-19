@@ -1,26 +1,18 @@
-import React, {useState} from 'react';
-import {Actions} from "react-native-router-flux";
-import {
-    StyleSheet,
-    View,
-    Text,
-    ImageBackground,
-    TouchableHighlight,
-    StatusBar
-} from 'react-native';
+import React, { useState } from 'react';
+import { Actions } from "react-native-router-flux";
+import { StyleSheet, View, Text, ImageBackground, TouchableHighlight, StatusBar} from 'react-native';
 
 import {SocketService} from "../utils/SocketService";
 import {PlayerType} from "../enum/PlayerType";
 import {dimension} from "../assets/dimension";
 import levels from "../assets/levels/levels.json";
 
-
+// Page de sélection de rôle : Lobby
 export default function Lobby() {
-    const [isReady, setIsReady] = useState(false);
-
-    const [playerType, setPlayerType] = useState(-1);
-    const [drawerStatus, setDrawerStatus] = useState(false);
-    const [controllerStatus, setControllerStatus] = useState(false);
+    const [isReady, setIsReady] = useState(false); // Statut de la partie
+    const [playerType, setPlayerType] = useState(-1); // Définit le type de joueur
+    const [drawerStatus, setDrawerStatus] = useState(false); // Statut du joueur dessinateur
+    const [controllerStatus, setControllerStatus] = useState(false); // Status du joueur controlleur
 
     // Set colors
     let controllerColor = "#7999";
@@ -41,6 +33,7 @@ export default function Lobby() {
     if (drawerStatus && playerType != PlayerType.DRAWER) { drawerSubText = [<Text key="drawerTaken" style={[styles.subtext]}>Rôle indisponible</Text>] }
     if (controllerStatus && playerType != PlayerType.CONTROLLER) { controllerSubText = [<Text key="controllerTaken" style={[styles.subtext]}>Rôle indisponible</Text>] }
 
+    // Selection de rôle
     const onTypeSelection = (type: PlayerType) => {
         console.log("type: ", type);
         setPlayerType(type);
@@ -49,6 +42,7 @@ export default function Lobby() {
         soloColor = "#799";
     }
 
+    // Connexion et déconnexion des joueurs
     SocketService.setDrawerConnected(() => {
         setDrawerStatus(true);
     })
@@ -62,6 +56,7 @@ export default function Lobby() {
         setControllerStatus(false);
     })
 
+    // Statut de la partie
     SocketService.onGameReady(() => {
         console.log('game is ready');
         setIsReady(true);
@@ -71,6 +66,7 @@ export default function Lobby() {
         setIsReady(false);
     })
 
+    // Lancement du mode 1 joueur (solo)
     function onModeSolo() {
         const level = levels.level1;
         if (playerType == PlayerType.DRAWER) {
@@ -80,7 +76,7 @@ export default function Lobby() {
         }
     }
 
-    // Check if the game has to start
+    // Lancement du mode 2 joueurs (multi)
     if (isReady) {
         const level = levels.level1;
         if (playerType == PlayerType.DRAWER) {
@@ -90,6 +86,7 @@ export default function Lobby() {
         }
     }
 
+    // Afichage
     return (
         <ImageBackground source={require("../assets/images/labybackground.png")} style={[styles.img]}>
             <View style={[styles.container]}>
@@ -130,6 +127,7 @@ export default function Lobby() {
     );
 }
 
+// Style de la page
 const styles = StyleSheet.create({
     container: {
         flex: 1,

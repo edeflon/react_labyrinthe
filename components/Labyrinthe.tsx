@@ -5,10 +5,10 @@ import Pilone from "../models/Pilone";
 import Wall from "../models/Wall";
 import Area from "../models/Area";
 
-// import levels from "../assets/levels/levels.json"
 import Hole from "../models/Hole";
 import {dimension} from "../assets/dimension";
 
+// Initialisation de la liste des pilones
 function setPiloneList(currentLevel: any) {
     let arrayPilone: Pilone[] = [];
     let cpt = 0;
@@ -20,6 +20,7 @@ function setPiloneList(currentLevel: any) {
     return arrayPilone;
 }
 
+// Initialisation de la liste des murs extérieurs
 function setExteriorWall(currentLevel: any) {
     let arrayWall: Wall[] = [];
     currentLevel.exterior_walls.map((data: any) => {
@@ -29,6 +30,7 @@ function setExteriorWall(currentLevel: any) {
     return arrayWall;
 }
 
+// Initialisation de la liste des murs intérieurs verticaux
 function setInteriorVerticalWall(currentLevel: any, display: boolean) {
     // VERTICAL WALL: col1->x30, col2->x5°, col3->x70
     let arrayIVWall: Wall[] = [];
@@ -39,6 +41,7 @@ function setInteriorVerticalWall(currentLevel: any, display: boolean) {
     return arrayIVWall;
 }
 
+// Initialisation de la liste des murs intérieurs horizontaux
 function setInteriorHorizontalWall(currentLevel: any, display: boolean) {
     let arrayHVWall: Wall[] = [];
     currentLevel.interior_horizontal_wall.map((data: any) => {
@@ -48,6 +51,7 @@ function setInteriorHorizontalWall(currentLevel: any, display: boolean) {
     return arrayHVWall;
 }
 
+// Initialisation de la liste des pièges
 function setHoles(currentLevel: any, display: boolean) {
     let arrayHole: Hole[] = [];
     let cpt = 0;
@@ -60,9 +64,9 @@ function setHoles(currentLevel: any, display: boolean) {
     return arrayHole
 }
 
+// Classe représentant le labyrinthe
 export default function Labyrinthe(currentLevel: any, display: boolean) {
-    console.log("Labyrinthe set");
-
+    // Zones de départ et d'arrivée
     const startZone = new Area(
         currentLevel.startZone.id,
         currentLevel.startZone.x,
@@ -78,14 +82,14 @@ export default function Labyrinthe(currentLevel: any, display: boolean) {
         currentLevel.endZone.height,
         currentLevel.endZone.color);
 
+    // Elements du labyrinthe : pilones, murs, pièges
     const arrayPilone = setPiloneList(currentLevel);
     const exteriorWall = setExteriorWall(currentLevel);
     const verticalWall = setInteriorVerticalWall(currentLevel, display);
     const horizontalWall = setInteriorHorizontalWall(currentLevel, display);
     const arrayHole = setHoles(currentLevel, display);
 
-    // x : 0 -> 100
-    // y : -40 -> 150
+    // Dessine les pilones
     function drawPiloneList() {
         return arrayPilone.map((data) => {
             return (
@@ -100,6 +104,7 @@ export default function Labyrinthe(currentLevel: any, display: boolean) {
         });
     }
 
+    // Dessine les pièges
     function drawHoleList() {
         return arrayHole.map((data) => {
             if (data.show) {
@@ -127,6 +132,7 @@ export default function Labyrinthe(currentLevel: any, display: boolean) {
         });
     }
 
+    // Dessine les murs extérieurs
     function drawExteriorWall() {
         return exteriorWall.map((data) => {
             return (
@@ -143,6 +149,7 @@ export default function Labyrinthe(currentLevel: any, display: boolean) {
         });
     }
 
+    // Dessine les murs intérieurs horizontaux
     function drawHorizontalWall() {
         return horizontalWall.map((data) => {
             if (data.show) {
@@ -161,6 +168,7 @@ export default function Labyrinthe(currentLevel: any, display: boolean) {
         });
     }
 
+    // Dessine les murs intérieurs verticaux
     function drawVerticalWall() {
         return verticalWall.map((data) => {
             if (data.show) {
@@ -178,6 +186,7 @@ export default function Labyrinthe(currentLevel: any, display: boolean) {
         });
     }
 
+    // Affichage
     return (
         <View style={styles.container}>
             <Svg
@@ -209,6 +218,7 @@ export default function Labyrinthe(currentLevel: any, display: boolean) {
     )
 }
 
+// Style
 const styles = StyleSheet.create({
     container: {
         flex: 1,
